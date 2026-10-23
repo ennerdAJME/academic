@@ -1,0 +1,227 @@
+body {
+    background-color: #d9d9d9;
+    background-image: linear-gradient(rgba(217, 217, 217, 0.65), hsla(0, 52%, 85%, 0.65)), url("images/sakura.jpeg");;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.box {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #d6d3d3;
+    background-image: linear-gradient(rgba(217, 217, 217, 0.65), rgba(234, 227, 227, 0.65)), url("images/bamboo.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+}
+.box img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.top-tall-steak {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+}
+.top-tall-steak h1 {
+    text-align: center;
+}
+.top-tall-steak img {
+    width: 500px;
+    height: 200px;
+    object-fit: contain;
+    object-position: center;
+}
+.top-tall-steak p {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+}
+.top-tall-rice{
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    object-position: bottom;
+    padding: 10px;
+    overflow: hidden;
+}
+.top-tall-rice img {
+    height: 200px;
+    width: 500px;
+    object-fit:contain;
+    object-position: bottom;
+}
+.top-tall-rice h1 {
+    text-align: center;
+}
+.top-tall-rice p {
+    text-align: center;
+    font-size: 20px;
+}
+.top-small-cookies{
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+    overflow: hidden;
+}
+.top-small-cookies img {
+    width: 150px;
+    height: 100px;
+    object-fit: contain;
+    object-position: center;
+    flex-shrink: 0;
+}
+.top-small-cookies h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+}
+.top-small-cookies p {
+    margin: 0;
+    font-size: 16px;
+}
+.top-small-cookies .cookies-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.top-small-apples {
+    height: 177px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+    overflow: hidden;
+}
+.top-small-apples img {
+    width: 135px;
+    height: 100px;
+    object-fit: contain;
+    object-position: center;
+    flex-shrink: 0; 
+}
+.top-small-apples h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+}
+.top-small-apples p {
+    margin: 0;
+    font-size: 16px;
+}
+.top-small-apples .apples-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+}
+.bottom-tall-more {
+    height: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    object-position: bottom;
+    padding: 10px;
+    overflow: hidden;
+}
+.bottom-tall-more h2 {
+    text-align: center;
+}
+.bottom-tall-more img {
+    height: 200px;
+    width: 300px;
+    object-fit:contain;
+    object-position: center; 
+}
+.bottom-tall-cake {
+    height: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    object-position: bottom;
+    padding: 10px;
+    overflow: hidden;
+}
+.bottom-tall-cake h2 {
+    text-align: center;
+}
+.bottom-tall-cake img {
+    height: 150px;
+    width: 500px;
+    object-fit:contain;
+    object-position: center; 
+}
+.bottom-tall-cake p {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+}
+.bottom-tall-salad {
+    height: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    object-position: bottom;
+    padding: 10px;
+    overflow: hidden;
+}
+.bottom-tall-salad h2{
+    text-align: center;
+}
+.bottom-tall-salad img {
+    height: 150px;
+    width: 500px;
+    object-fit:contain;
+    object-position: center; 
+}
+.bottom-tall-salad p {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+}
+.bottom-tall-diet {
+    height: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+}
+.bottom-tall-diet img {
+    width: 150px;
+    height: 120px;
+    object-fit: contain;
+    object-position: center;
+}
+.bottom-tall-diet h2 {
+    text-align: center;
+}
+.bottom-tall-diet p {
+    text-align: center;
+    font-size: 18px;
+}
