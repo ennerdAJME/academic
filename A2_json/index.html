@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+  <head>
+    <title>Team Fortress 2 Mercs</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        min-height: 100vh;
+        background-image: url("images/silhouettes.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+      }
+
+      .tf2-card {
+        background-color: rgb(154, 146, 128);
+        color: #201d18;
+        border: 2px solid #393329;
+      }
+
+      .merc-image {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        object-position: center;
+      }
+
+      .merc-card {
+        height: 100%;
+      }
+
+      .merc-description {
+        overflow-wrap: anywhere;
+      }
+
+      .card {
+        background-color: rgb(154, 146, 128);
+        color: #201d18;
+        border: 2px solid #393329;
+        object-position: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-fluid p-4 p-md-5">
+      <div class="card tf2-card rounded-4 p-4 p-md-5 shadow mb-4 text-white">
+        <h1 class="text-center mb-0">Team Fortress 2 Mercs</h1>
+      </div>
+
+      <div class="row g-4" id="parent"></div>
+    </div>
+
+    <div class="container my-4">
+      <div class="row justify-content-center">
+        <div class="col-3 text-center">
+          <div class="card rounded-5 p-3 shadow">
+            <a href="https://ennerdajme.github.io/">Back to portfolio</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const people = [
+        {
+          tf2class: "Scout",
+          classtype: "(Offense)",
+          image: "Scout_Full_Body.webp",
+          description:
+            "A snarky, overconfident chad of a mercenary, and the fastest mercenary in all of tf2. Scout excels at quick movement, dodging with his double jump and hit-and-run attacks.",
+        },
+        {
+          tf2class: "Soldier",
+          classtype: "(Offense)",
+          image: "250px-Soldier.webp",
+          description:
+            "A mad patriot with a rocket launcher, soldier uses his rockets for explosive firepower to damage enemies and control the battlefield and to perform the infamous rocket jump for quick movement and aerial control.",
+        },
+        {
+          tf2class: "Pyro",
+          classtype: "(Offense)",
+          image: "300px-Pyro.webp",
+          description:
+            "An unknown mercenary with very little info on his or her background and an unstable pyromaniac who sees burning people to death as blowing bubbles to babies. Yes, he/she is infact the most mysterious, most unhinge and psychologically insane character in all of tf2.",
+        },
+        {
+          tf2class: "Demoman",
+          classtype: "(Defense)",
+          image: "Demoman.webp",
+          description:
+            "A black scottish cyclops whose drunk 90% of the time, he is the only merc to have 2 primary weapons, the grenade launcher and the stickybomb launcher. He is also an expert in melee since he can have a shield as a secondary and the many swords he owns makes him a dangerous bomber and swordsman.",
+        },
+        {
+          tf2class: "Heavy",
+          classtype: "(Defense)",
+          image: "H.W.G.webp",
+          description:
+            "One of the most underrated characters and the least picked merc, heavy is a slow but deadly tank, with his minigun sasha he mows down his enemies without breaking a sweat, he is also a PhD in Russian literature.",
+        },
+        {
+          tf2class: "Engineer",
+          classtype: "(Defense)",
+          image: "300px-Engineer.webp",
+          description:
+            "One of if not the most intelligent mercenary in team fortress 2, the engineer can build sentry guns for defending, dispensers for supporting and teleporters to help his team get to the battlefield immediately.",
+        },
+        {
+          tf2class: "Medic",
+          classtype: "(Support)",
+          image: "Medic.webp",
+          description:
+            "Another contender for the being the smartest mercenary in team fortress 2, the medis is NOT a licensed doctor, he lost his medical license way before joining team fortress 2, and is the most questionable doctor in the entire tf2 franchise.",
+        },
+        {
+          tf2class: "Sniper",
+          classtype: "(Support)",
+          image: "Sniper.webp",
+          description:
+            "The sniper is one of the most annoying and hardest class to play in tf2, he is an assassin born from New Zealand and raise in Australia, this bushman sniper is an assassin with his own code, a professional with standards, a man who is polite, efficient and has a plan to kill everyone he meets. His parents do not support his assassin job.",
+        },
+        {
+          tf2class: "Spy",
+          classtype: "(Support)",
+          image: "Spy.webp",
+          description:
+            "Another one of the mercenary who is both mysterious and an annoying class to play against, the spy is an interesting character, he is portrayed as a french assassin, however his lore suggest he might not be french. He is also the father of the Scout.",
+        },
+      ];
+
+      const elParent = document.getElementById("parent");
+
+      for (let i = 0; i < people.length; i++) {
+        elParent.innerHTML += `
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card tf2-card merc-card p-3 shadow rounded-4 text-center text-white">
+
+              <h2 class="h3">
+                ${people[i].tf2class}
+              </h2>
+
+              <p class="fw-bold mb-2">
+                ${people[i].classtype}
+              </p>
+
+              <img
+                src="images/${people[i].image}"
+                alt="${people[i].tf2class}"
+                class="merc-image mb-3"
+                loading="lazy"
+              />
+
+              <p class="merc-description mb-0">
+                ${people[i].description}
+              </p>
+
+            </div>
+          </div>
+        `;
+      }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
