@@ -3,206 +3,362 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TF2 Mercenary Database</title>
+    <title>Food Recipe Finder</title>
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
     />
-    <link href="style.css" rel="stylesheet" />
   </head>
-
   <body>
-    <div class="container-fluid p-4">
-      <div class="card tf2-card rounded-4 p-4 p-md-5 shadow mb-4 text-white">
-        <h1 class="text-center mb-0">Team Fortress 2 Mercs</h1>
+    <div class="container-fluid p-4 bg-success">
+      <div class="row">
+        <div class="col">
+          <div class="h1 text-center text-white">Food Recipe Finder</div>
+        </div>
       </div>
     </div>
 
-    <div class="container">
-      <div class="card search-box p-3 my-3 md-5 rounded-4 shadow text-white">
-        <h3 class="text-center">Find a Mercenary</h3>
-        <div class="row g-3">
-          <div class="col-md-6">
-            <input
-              type="text"
-              id="search"
-              class="form-control"
-              placeholder="Search mercenary name..."
-            />
-          </div>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-12 col-md-8 align-self-center mx-auto">
+          <div class="card search-box p-3 my-3 rounded-4 shadow text-white">
+            <h3
+              class="text-center mb-3 rounded p-2"
+              style="background-color: #198754"
+            >
+              Find a Recipe
+            </h3>
 
-          <div class="col-md-6">
-            <select id="roleFilter" class="form-select">
-              <option value="all">All Roles</option>
-              <option value="offensive">Offensive</option>
-              <option value="defensive">Defensive</option>
-              <option value="support">Support</option>
-            </select>
+            <form id="searchForm" class="d-flex flex-row">
+              <input
+                type="text"
+                class="form-control rounded-start-pill"
+                placeholder="Enter a food name..."
+                id="searchInput"
+              />
+
+              <button
+                type="submit"
+                class="btn btn-primary rounded-end-pill"
+                id="searchButton"
+              >
+                Search
+              </button>
+            </form>
           </div>
         </div>
       </div>
-
-      <nav>
-        <ul class="pagination justify-content-center">
-          <li class="page-item">
-            <button class="page-link" onclick="prev()">Previous</button>
-          </li>
-          <li class="page-item">
-            <span class="page-link" id="currentpage">1</span>
-          </li>
-          <li class="page-item">
-            <button class="page-link" onclick="next()">Next</button>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="text-center text-white mb-3" id="status">
-        Loading mercenary information...
-      </div>
     </div>
 
     <div class="container">
-      <div class="row" id="parent"></div>
+      <div
+        class="text-center my-4"
+        id="status"
+        role="status"
+        aria-live="polite"
+      >
+        Search for a recipe to get started!
+      </div>
     </div>
 
-    <script>
-      const Mercenaries = [];
-      const elParent = document.getElementById("parent");
-      const elCurrentPage = document.getElementById("currentpage");
-      const elStatus = document.getElementById("status");
+    <div class="container mb-5">
+      <div class="row g-4" id="parent"></div>
+    </div>
 
-      const elSearch = document.getElementById("search");
-      const elRoleFilter = document.getElementById("roleFilter");
+    <nav aria-label="Recipe pagination">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <button class="page-link" id="prevButton" type="button" disabled>
+            Previous
+          </button>
+        </li>
+
+        <li class="page-item">
+          <span class="page-link" id="currentpage">1</span>
+        </li>
+
+        <li class="page-item">
+          <button class="page-link" id="nextButton" type="button" disabled>
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container my-4">
+      <div class="row justify-content-center">
+        <div class="col-3 text-center">
+          <div class="card rounded-5 p-3 shadow bg-success">
+            <a
+              class="h2 text-center"
+              style="color: white; text-decoration: none"
+              href="https://ennerdajme.github.io/"
+              >Back to portfolio</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center my-4">
+      <a
+        href="https://www.edamam.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Powered by Edamam
+      </a>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      const APP_ID = "416eae41";
+      const APP_KEY = "3eaf81c8747c8c4003f8c844d99d1eea";
+
+      const API_URL = "https://api.edamam.com/api/recipes/v2";
+
+      const elSearch = document.getElementById("searchInput");
+      const elForm = document.getElementById("searchForm");
+      const elParent = document.getElementById("parent");
+      const elStatus = document.getElementById("status");
+      const elCurrentPage = document.getElementById("currentpage");
+
+      const elPrevButton = document.getElementById("prevButton");
+      const elNextButton = document.getElementById("nextButton");
+      const elSearchButton = document.getElementById("searchButton");
 
       let page = 1;
-      const perPage = 3;
+      let nextUrl = null;
+      let pageHistory = [];
+      let currentPageUrl = null;
 
-      let mercenaries = [];
-
-      async function getMercenaries() {
-        try {
-          elStatus.innerHTML = "Loading mercenaries...";
-          const response = await fetch(API_URL);
-          if (!response.ok) {
-            throw new Error("API connection failed.");
-          }
-
-          const data = await response.json();
-          const items = data.result.items;
-          const classes = [
-            ...new Set(items.flatMap((item) => item.used_by_classes || [])),
-          ];
-
-          mercenaries = classes
-            .map((className) => {
-              const id = className.toLowerCase();
-              const details = classDetails[id];
-              if (!details) return null;
-
-              return {
-                id: id,
-                name: capitalizeFirstLetter(id),
-                role: details.role,
-                image: details.image,
-                description: details.description,
-              };
-            })
-            .filter((merc) => merc !== null);
-
-          applyFilters();
-        } catch (error) {
-          elStatus.innerHTML = "Error loading mercenaries: " + error.message;
+      async function getFood() {
+        const query = elSearch.value.trim();
+        if (!query) {
+          elStatus.textContent = "Please enter a food name.";
+          elParent.innerHTML = "";
+          return;
         }
-      }
-
-      function capitalizeFirstLetter(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-      }
-
-      function applyFilters() {
-        const searchValue = elSearch.value.toLowerCase();
-        const roleValue = elRoleFilter.value;
-        filteredMercs = mercenaries.filter((merc) => {
-          const matchesName = merc.name.toLowerCase().includes(searchValue);
-          const matchesRole = roleValue === "all" || merc.role === roleValue;
-          return matchesName && matchesRole;
-        });
-        page = 1;
-        displayMercenaries();
-      }
-
-      function displayMercenaries() {
-        elParent.innerHTML = "";
-        const finalPage = Math.max(
-          1,
-          Math.ceil(filteredMercs.length / perPage),
-        );
-        const start = (page - 1) * perPage;
-        const currentMercs = filteredMercs.slice(start, start + perPage);
-        elCurrentPage.innerHTML = page;
-        elStatus.innerHTML = filteredMercs.length + " mercenaries found";
-        if (currentMercs.length === 0) {
-          elParent.innerHTML = `
-            <div class="col-12">
-              <div class="alert alert-warning text-center">
-                No mercenaries found.
-              </div>
-            </div>
-          `;
+        if (APP_ID === "YOUR_APP_ID" || APP_KEY === "YOUR_APP_KEY") {
+          elStatus.textContent =
+            "Please enter your Edamam API credentials first.";
           return;
         }
 
-        currentMercs.forEach((merc) => {
-          const role = capitalizeFirstLetter(merc.role);
-          elParent.innerHTML += `
-            <div class="col-12 col-md-4">
-              <div class="card merc-card rounded-4 shadow p-4 text-center text-white">
-                <h2 class="mb-2">
-                    ${merc.id}
-                    ${merc.name}
-                  </a>
-                </h2>
-                <h5 class="mb-3">
-                  (${role})
-                </h5>
-                <img
-                  src="images/${merc.image}"
-                  alt="${merc.name}"
-                  class="merc-image"
-                >
-              </div>
-            </div>
-          `;
+        page = 1;
+        pageHistory = [];
+        nextUrl = null;
+        currentPageUrl = null;
+
+        const params = new URLSearchParams({
+          type: "public",
+          q: query,
+          app_id: APP_ID,
+          app_key: APP_KEY,
+          from: "0",
+          to: "20",
+        });
+
+        const url = `${API_URL}?${params.toString()}`;
+        await fetchRecipes(url);
+      }
+
+      async function loadDefaultRecipes() {
+        page = 1;
+        pageHistory = [];
+        nextUrl = null;
+        currentPageUrl = null;
+
+        const params = new URLSearchParams({
+          type: "public",
+          q: "food",
+          app_id: APP_ID,
+          app_key: APP_KEY,
+          from: "0",
+          to: "20",
+        });
+
+        const url = `${API_URL}?${params.toString()}`;
+        await fetchRecipes(url);
+      }
+
+      async function fetchRecipes(url) {
+        try {
+          elStatus.textContent = "Loading recipes...";
+          elParent.innerHTML = "";
+
+          elSearchButton.disabled = true;
+          elPrevButton.disabled = true;
+          elNextButton.disabled = true;
+
+          const response = await fetch(url);
+
+          if (!response.ok) {
+            const errorDetails = await response.text();
+            throw new Error(
+              `API request failed: ${response.status} - ${errorDetails}`,
+            );
+          }
+
+          const data = await response.json();
+
+          currentPageUrl = url;
+
+          const recipes = data.hits || [];
+
+          nextUrl = data._links?.next?.href || null;
+
+          if (recipes.length === 0) {
+            elStatus.textContent = "No recipes found.";
+            updatePagination();
+            return;
+          }
+
+          displayRecipes(recipes);
+
+          elStatus.textContent = `${data.count} recipes found for "${elSearch.value}"`;
+
+          updatePagination();
+        } catch (error) {
+          console.error(error);
+
+          nextUrl = null;
+
+          elStatus.textContent = "Error loading recipes: " + error.message;
+
+          updatePagination();
+        } finally {
+          elSearchButton.disabled = false;
+        }
+      }
+
+      let currentRecipes = [];
+
+      function displayRecipes(recipes) {
+        elParent.innerHTML = "";
+
+        currentRecipes = recipes.map((item) => item.recipe);
+        currentRecipes.forEach((recipe, index) => {
+          const image = recipe.image || "";
+          const card = `
+      <div class="col-12 col-md-4">
+  <div class="card recipe-card rounded-4 shadow overflow-hidden h-100">
+    <a href="view.html" class="recipe-link" data-index="${index}">
+      <div class="recipe-image-container">
+        <img
+          src="${escapeHTML(image)}"
+          class="img-fluid w-100 h-100"
+          alt="${escapeHTML(recipe.label)}"
+          loading="lazy"
+        >
+      </div>
+    </a>
+  </div>
+</div>
+    `;
+
+          elParent.innerHTML += card;
         });
       }
-      function prev() {
-        const finalPage = Math.max(
-          1,
-          Math.ceil(filteredMercs.length / perPage),
+
+      function escapeHTML(value) {
+        return String(value ?? "").replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[character],
         );
+      }
+
+      function updatePagination() {
+        elCurrentPage.textContent = page;
+
+        elPrevButton.disabled = page === 1;
+        elNextButton.disabled = !nextUrl;
+      }
+
+      async function prev() {
+        if (pageHistory.length === 0) return;
+
+        const previousUrl = pageHistory.pop();
+
         page--;
-        if (page < 1) {
-          page = finalPage;
-        }
-        displayMercenaries();
+
+        await fetchRecipes(previousUrl);
       }
 
-      function next() {
-        const finalPage = Math.max(
-          1,
-          Math.ceil(filteredMercs.length / perPage),
-        );
+      async function next() {
+        if (!nextUrl || !currentPageUrl) return;
+
+        pageHistory.push(currentPageUrl);
+
+        const requestedUrl = nextUrl;
+
         page++;
-        if (page > finalPage) {
-          page = 1;
-        }
-        displayMercenaries();
+
+        await fetchRecipes(requestedUrl);
       }
 
-      elSearch.addEventListener("input", applyFilters);
-      elRoleFilter.addEventListener("change", applyFilters);
-      getMercenaries();
+      elForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        getFood();
+      });
+
+      elPrevButton.addEventListener("click", prev);
+      elNextButton.addEventListener("click", next);
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        const savedPage = sessionStorage.getItem("recipePageState");
+
+        if (savedPage) {
+          const savedState = JSON.parse(savedPage);
+          page = savedState.page;
+          pageHistory = savedState.pageHistory;
+          elSearch.value = savedState.searchQuery;
+          await fetchRecipes(savedState.currentPageUrl);
+        } else {
+          loadDefaultRecipes();
+        }
+      });
+
+      elParent.addEventListener("click", (event) => {
+        const link = event.target.closest(".recipe-link");
+        if (!link) return;
+        event.preventDefault();
+        const index = Number(link.dataset.index);
+        const selectedRecipe = currentRecipes[index];
+
+        if (!selectedRecipe) return;
+        sessionStorage.setItem(
+          "selectedRecipe",
+          JSON.stringify(selectedRecipe),
+        );
+
+        sessionStorage.setItem(
+          "recipePageState",
+          JSON.stringify({
+            page: page,
+            pageHistory: pageHistory,
+            currentPageUrl: currentPageUrl,
+            searchQuery: elSearch.value,
+          }),
+        );
+
+        window.location.href = "view.html";
+      });
     </script>
   </body>
 </html>

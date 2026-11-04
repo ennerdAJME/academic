@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recipe Details</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <div class="container-fluid p-4 bg-success">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center text-white">Food Recipe Finder</h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-4">
+      <a href="index.html" id="elBacklink" class="btn btn-outline-success">
+        &larr; Back to Recipes
+      </a>
+    </div>
+
+    <div class="container my-4">
+      <div id="recipeDetails">
+        <p class="text-center">Loading recipe...</p>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      const elDetails = document.getElementById("recipeDetails");
+      const elBacklink = document.getElementById("elBacklink");
+      const page = sessionStorage.getItem("currentPage");
+      const savedRecipe = sessionStorage.getItem("selectedRecipe");
+
+      if (!savedRecipe) {
+        elDetails.innerHTML = `
+          <div class="alert alert-warning text-center">
+            No recipe selected.
+            <br>
+            Please return to the recipe gallery and select a food.
+            <br><br>
+            <a href="index.html" class="btn btn-success">
+              Back to Recipes
+            </a>
+          </div>
+        `;
+      } else {
+        const recipe = JSON.parse(savedRecipe);
+
+        displayRecipe(recipe);
+      }
+
+      function displayRecipe(recipe) {
+        const ingredients = recipe.ingredientLines || [];
+
+        const ingredientHTML = ingredients
+          .map(
+            (ingredient) => `
+            <li class="mb-2">
+              ${escapeHTML(ingredient)}
+            </li>
+          `,
+          )
+          .join("");
+
+        const calories = Math.round(recipe.calories || 0);
+
+        const cookingTime =
+          recipe.totalTime > 0
+            ? recipe.totalTime + " minutes"
+            : "Not specified";
+
+        const servings = recipe.yield || "Not specified";
+
+        const image = recipe.image || "";
+
+        elDetails.innerHTML = `
+
+        <div class="col-12 col-md-10 mx-auto">
+        <div class="card recipe-card rounded-4 justify-content-center shadow overflow-hidden h-100">
+        <div class="recipe-image-container">
+            <img
+            src="${escapeHTML(image)}"
+            class="img-fluid w-50 h-75 pt-5 mx-auto d-block"
+            alt="${escapeHTML(recipe.label)}"
+            loading="lazy"
+            >
+
+            <div class="card-body">
+              <h2 class="mb-3 justify-content-center text-center">
+                ${escapeHTML(recipe.label)}
+              </h2>
+
+              <p class="text-muted justify-content-center text-center">
+                Source: ${escapeHTML(recipe.source || "Unknown")}
+              </p>
+
+              <hr>
+
+              <div class="row text-center g-3 mb-4">
+
+                <div class="col-12 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <h5>Calories</h5>
+                    <p class="mb-0">${calories} kcal</p>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <h5>Cooking Time</h5>
+                    <p class="mb-0">${cookingTime}</p>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <h5>Servings</h5>
+                    <p class="mb-0">${servings}</p>
+                  </div>
+                </div>
+
+              </div>
+
+              <h4>Ingredients</h4>
+
+              <ul class="mb-4">
+                ${ingredientHTML}
+              </ul>
+
+              <hr>
+
+              <h4>Additional Information</h4>
+              <div class="row text-center g-3 mb-4">
+                <div class="col-12 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <h5><strong>Cuisine:</strong></h5>
+                    <p class="mb-0">${escapeHTML((recipe.cuisineType || ["Not specified"]).join(", "))}</p>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <h5><strong>Meal Type:</strong></h5>
+                    <p class="mb-0">${escapeHTML((recipe.mealType || ["Not specified"]).join(", "))}</p>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <h5><strong>Dish Type:</strong></h5>
+                    <p class="mb-0">${escapeHTML((recipe.dishType || ["Not specified"]).join(", "))}</p>
+                  </div>
+                </div>
+              </div>
+              <p>
+
+              <hr>
+              <a
+                href="${escapeHTML(recipe.url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-success w-100"
+              >
+                View Full Cooking Instructions
+              </a>
+            </div>
+        </div>
+        `;
+      }
+      function escapeHTML(value) {
+        return String(value ?? "").replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[character],
+        );
+      }
+    </script>
+  </body>
+</html>
