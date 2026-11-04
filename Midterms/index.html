@@ -67,81 +67,7 @@
     </div>
 
     <script>
-      const mercenaries = [
-        {
-          id: "scout",
-          name: "Scout",
-          role: "offensive",
-          image: "Scout_Full_Body.webp",
-          description:
-            "The fastest mercenary on the battlefield. Scout uses his speed and double jump to outmaneuver opponents.",
-        },
-        {
-          id: "soldier",
-          name: "Soldier",
-          role: "offensive",
-          image: "250px-Soldier.webp",
-          description:
-            "A powerful combatant who uses his rocket launcher to deal explosive damage and control the battlefield.",
-        },
-        {
-          id: "pyro",
-          name: "Pyro",
-          role: "offensive",
-          image: "300px-Pyro.webp",
-          description:
-            "A mysterious mercenary who uses a flamethrower to burn enemies and protect teammates.",
-        },
-        {
-          id: "demoman",
-          name: "Demoman",
-          role: "defensive",
-          image: "Demoman.webp",
-          description:
-            "An explosives expert who uses grenades and sticky bombs to defend important areas.",
-        },
-        {
-          id: "heavy",
-          name: "Heavy",
-          role: "defensive",
-          image: "H.W.G.webp",
-          description:
-            "A heavily armed mercenary who uses his minigun and high health to withstand enemy attacks.",
-        },
-        {
-          id: "engineer",
-          name: "Engineer",
-          role: "defensive",
-          image: "300px-Engineer.webp",
-          description:
-            "A talented builder who constructs sentry guns, dispensers, and teleporters to support his team.",
-        },
-        {
-          id: "medic",
-          name: "Medic",
-          role: "support",
-          image: "Medic.webp",
-          description:
-            "A doctor who heals teammates and uses his ÜberCharge to give allies temporary invulnerability.",
-        },
-        {
-          id: "sniper",
-          name: "Sniper",
-          role: "support",
-          image: "Sniper.webp",
-          description:
-            "A long-range marksman who eliminates enemies using precise shots from his sniper rifle.",
-        },
-        {
-          id: "spy",
-          name: "Spy",
-          role: "support",
-          image: "Spy.webp",
-          description:
-            "A stealth specialist who disguises himself, becomes invisible, and eliminates enemies through backstabbing.",
-        },
-      ];
-
+      const Mercenaries = [];
       const elParent = document.getElementById("parent");
       const elCurrentPage = document.getElementById("currentpage");
       const elStatus = document.getElementById("status");
@@ -151,31 +77,42 @@
 
       let page = 1;
       const perPage = 3;
-      let filteredMercs = [...mercenaries];
 
-      const API_URL =
-        "https://raw.githubusercontent.com/tsuza/tf2-item-schema/master/files/json.txt";
-      let apiClasses = [];
+      let mercenaries = [];
+
       async function getMercenaries() {
         try {
+          elStatus.innerHTML = "Loading mercenaries...";
           const response = await fetch(API_URL);
           if (!response.ok) {
-            throw new Error("Unable to retrieve TF2 schema.");
+            throw new Error("API connection failed.");
           }
-          const data = await response.json();
-          const items = data.result?.items || data.items || [];
 
-          apiClasses = [
-            ...new Set(
-              items
-                .flatMap((item) => item.used_by_classes || [])
-                .map((name) => name.toLowerCase()),
-            ),
+          const data = await response.json();
+          const items = data.result.items;
+          const classes = [
+            ...new Set(items.flatMap((item) => item.used_by_classes || [])),
           ];
+
+          mercenaries = classes
+            .map((className) => {
+              const id = className.toLowerCase();
+              const details = classDetails[id];
+              if (!details) return null;
+
+              return {
+                id: id,
+                name: capitalizeFirstLetter(id),
+                role: details.role,
+                image: details.image,
+                description: details.description,
+              };
+            })
+            .filter((merc) => merc !== null);
+
+          applyFilters();
         } catch (error) {
-          console.error("Error fetching TF2 schema:", error);
-        } finally {
-          displayMercenaries();
+          elStatus.innerHTML = "Error loading mercenaries: " + error.message;
         }
       }
 
@@ -207,36 +144,36 @@
         elStatus.innerHTML = filteredMercs.length + " mercenaries found";
         if (currentMercs.length === 0) {
           elParent.innerHTML = `
-      <div class="col-12">
-        <div class="alert alert-warning text-center">
-          No mercenaries found.
-        </div>
-      </div>
-    `;
+            <div class="col-12">
+              <div class="alert alert-warning text-center">
+                No mercenaries found.
+              </div>
+            </div>
+          `;
           return;
         }
 
         currentMercs.forEach((merc) => {
           const role = capitalizeFirstLetter(merc.role);
           elParent.innerHTML += `
-      <div class="col-12 col-md-4">
-        <div class="card merc-card rounded-4 shadow p-4 text-center text-white">
-          <h2 class="mb-2">
-              ${merc.id}
-              ${merc.name}
-            </a>
-          </h2>
-          <h5 class="mb-3">
-            (${role})
-          </h5>
-          <img
-            src="images/${merc.image}"
-            alt="${merc.name}"
-            class="merc-image"
-          >
-        </div>
-      </div>
-    `;
+            <div class="col-12 col-md-4">
+              <div class="card merc-card rounded-4 shadow p-4 text-center text-white">
+                <h2 class="mb-2">
+                    ${merc.id}
+                    ${merc.name}
+                  </a>
+                </h2>
+                <h5 class="mb-3">
+                  (${role})
+                </h5>
+                <img
+                  src="images/${merc.image}"
+                  alt="${merc.name}"
+                  class="merc-image"
+                >
+              </div>
+            </div>
+          `;
         });
       }
       function prev() {
