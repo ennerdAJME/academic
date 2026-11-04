@@ -1,72 +1,106 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
   <head>
+    <title>Team Fortress 2 Mercs</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>API</title>
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
     />
+
+    <style>
+      body {
+        min-height: 100vh;
+        background-image: url("images/silhouettes.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+      }
+
+      .tf2-card {
+        background-color: rgb(154, 146, 128);
+        color: #201d18;
+        border: 2px solid #393329;
+      }
+
+      .merc-image {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        object-position: center;
+      }
+
+      .merc-card {
+        height: 100%;
+      }
+
+      .merc-description {
+        overflow-wrap: anywhere;
+      }
+
+      .card {
+        background-color: rgb(154, 146, 128);
+        color: #201d18;
+        border: 2px solid #393329;
+        object-position: center;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="container-fluid p-4 bg-success">
-      <div class="row">
-        <div class="col">
-          <div class="h3 text-center text-white">Food Recipes</div>
-        </div>
+    <div class="container-fluid p-4 p-md-5">
+      <div class="card tf2-card rounded-4 p-4 p-md-5 shadow mb-4 text-white">
+        <div class="h1 text-center mb-0">Team Fortress 2 Mercs</div>
       </div>
-    </div>
 
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-6">
-          <div class="card rounded-5 p-5">
-            <div class="d-flex flex-row">
-              <input
-                type="text"
-                class="form-control rounded-start-pill"
-                placeholder="Search for the recipe you want"
-                id="searchInput"
-              />
-              <div
-                class="btn btn-success rounded-end-pill"
-                onclick="getRecipe()"
-              >
-                Search
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="container">
+      <div class="card search-box p-3 my-4 rounded-4 shadow text-white">
+      <div class="h3 text-center">Find a Mercenary</div>
 
-    <div class="container mt-3">
-      <div class="row justify-content-center">
-        <div class="col-10">
-          <div class="card shadow rounded-5 p-5 text-center">
-            <div
-              id="imageContainer"
-              class="mx-auto rounded-5"
-              style="width: 300px; height: 300px"
-            >
-              <img src="" style="width: 100%" id="image" />
-            </div>
-          </div>
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <input
+            type="text"
+            id="search"
+            class="form-control"
+            placeholder="Search mercenary name..."
+          >
         </div>
+
+        <div class="col-md-6">
+          <select id="roleFilter" class="form-select">
+            <option value="all">All Roles</option>
+            <option value="offensive">Offensive</option>
+            <option value="defensive">Defensive</option>
+            <option value="support">Support</option>
+          </select>
+        </div>
+
       </div>
     </div>
+      <div class="row g-4" id="parent"></div>
+    </div>
+    <div class="container p-2 align-items-center justify-content-center d-flex">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" onclick="prev()">Previous</a></li>
+        <li class="page-item"><a class="page-link" id="currentpage">1</a></li>
+        <li class="page-item"><a class="page-link" onclick="next()">Next</a></li>
+      </ul>
+    </nav>
+  </div>
 
     <div class="container my-4">
       <div class="row justify-content-center">
         <div class="col-3 text-center">
           <div class="card rounded-5 p-3 shadow">
             <a
-              class="h4 text-center"
-              style="color: rgb(25, 26, 25); text-decoration: none"
+              class="h2 text-center"
+              style="color: white; text-decoration: none"
               href="https://ennerdajme.github.io/"
               >Back to portfolio</a
             >
@@ -74,12 +108,86 @@
         </div>
       </div>
     </div>
+    <script>
+      const people = [
+        {
+          tf2class: "Scout",
+          classtype: "(Offense)",
+          image: "Scout_Full_Body.webp",          
+        },
+        {
+          tf2class: "Soldier",
+          classtype: "(Offense)",
+          image: "250px-Soldier.webp",          
+        },
+        {
+          tf2class: "Pyro",
+          classtype: "(Offense)",
+          image: "300px-Pyro.webp",          
+        },
+        {
+          tf2class: "Demoman",
+          classtype: "(Defense)",
+          image: "Demoman.webp",          
+        },
+        {
+          tf2class: "Heavy",
+          classtype: "(Defense)",
+          image: "H.W.G.webp",          
+        },
+        {
+          tf2class: "Engineer",
+          classtype: "(Defense)",
+          image: "300px-Engineer.webp",          
+        },
+        {
+          tf2class: "Medic",
+          classtype: "(Support)",
+          image: "Medic.webp",
+        },
+        {
+          tf2class: "Sniper",
+          classtype: "(Support)",
+          image: "Sniper.webp",
+        },
+        {
+          tf2class: "Spy",
+          classtype: "(Support)",
+          image: "Spy.webp",          
+        },
+      ];
+
+      const elParent = document.getElementById("parent");
+
+      for (let i = 0; i < people.length; i++) {
+        elParent.innerHTML += `
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card tf2-card merc-card p-3 shadow rounded-4 text-center text-white">
+
+              <h2 class="h3">
+                ${people[i].tf2class}
+              </h2>
+
+              <p class="fw-bold mb-2">
+                ${people[i].classtype}
+              </p>
+
+              <img
+                src="images/${people[i].image}"
+                alt="${people[i].tf2class}"
+                class="merc-image mb-3"
+                loading="lazy"
+              />
+
+            </div>
+          </div>
+        `;
+      }
+    </script>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
-    <script></script>
   </body>
 </html>
