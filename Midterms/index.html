@@ -9,45 +9,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-
-    <style>
-      body {
-        min-height: 100vh;
-        background-image: url("images/silhouettes.jpg");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-      }
-
-      .tf2-card {
-        background-color: rgb(154, 146, 128);
-        color: #201d18;
-        border: 2px solid #393329;
-      }
-
-      .merc-image {
-        width: 100%;
-        height: 220px;
-        object-fit: contain;
-        object-position: center;
-      }
-
-      .merc-card {
-        height: 100%;
-      }
-
-      .merc-description {
-        overflow-wrap: anywhere;
-      }
-
-      .card {
-        background-color: rgb(154, 146, 128);
-        color: #201d18;
-        border: 2px solid #393329;
-        object-position: center;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -79,20 +41,32 @@
             <option value="support">Support</option>
           </select>
         </div>
-
       </div>
     </div>
-      <div class="row g-4" id="parent"></div>
     </div>
     <div class="container p-2 align-items-center justify-content-center d-flex">
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item"><a class="page-link" onclick="prev()">Previous</a></li>
-        <li class="page-item"><a class="page-link" id="currentpage">1</a></li>
-        <li class="page-item"><a class="page-link" onclick="next()">Next</a></li>
-      </ul>
-    </nav>
+    <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <button class="page-link" onclick="prev()">
+                Previous
+              </button>
+            </li>
+            <li class="page-item">
+              <span class="page-link" id="currentpage">1</span>
+            </li>
+            <li class="page-item">
+              <button class="page-link" onclick="next()">
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
   </div>
+
+    <div class="container">
+      <div class="row g-4" id="parent"></div>
+    </div>
 
     <div class="container my-4">
       <div class="row justify-content-center">
@@ -108,22 +82,13 @@
         </div>
       </div>
     </div>
+
     <script>
-      const people = [
+      const mercs = [
         {
           tf2class: "Scout",
           classtype: "(Offense)",
           image: "Scout_Full_Body.webp",          
-        },
-        {
-          tf2class: "Soldier",
-          classtype: "(Offense)",
-          image: "250px-Soldier.webp",          
-        },
-        {
-          tf2class: "Pyro",
-          classtype: "(Offense)",
-          image: "300px-Pyro.webp",          
         },
         {
           tf2class: "Demoman",
@@ -131,24 +96,34 @@
           image: "Demoman.webp",          
         },
         {
-          tf2class: "Heavy",
-          classtype: "(Defense)",
-          image: "H.W.G.webp",          
-        },
-        {
-          tf2class: "Engineer",
-          classtype: "(Defense)",
-          image: "300px-Engineer.webp",          
-        },
-        {
           tf2class: "Medic",
           classtype: "(Support)",
           image: "Medic.webp",
         },
         {
+          tf2class: "Soldier",
+          classtype: "(Offense)",
+          image: "250px-Soldier.webp",          
+        },
+        {
+          tf2class: "Heavy",
+          classtype: "(Defense)",
+          image: "H.W.G.webp",          
+        },
+        {
           tf2class: "Sniper",
           classtype: "(Support)",
           image: "Sniper.webp",
+        },
+        {
+          tf2class: "Pyro",
+          classtype: "(Offense)",
+          image: "300px-Pyro.webp",          
+        },
+        {
+          tf2class: "Engineer",
+          classtype: "(Defense)",
+          image: "300px-Engineer.webp",          
         },
         {
           tf2class: "Spy",
@@ -157,24 +132,29 @@
         },
       ];
 
+     function capitalizeFirstLetter(str) {
+      if (!str) return str;
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
       const elParent = document.getElementById("parent");
 
-      for (let i = 0; i < people.length; i++) {
+      for (let i = 0; i < mercs.length; i++) {
         elParent.innerHTML += `
           <div class="col-12 col-md-6 col-lg-4">
             <div class="card tf2-card merc-card p-3 shadow rounded-4 text-center text-white">
 
               <h2 class="h3">
-                ${people[i].tf2class}
+                ${mercs[i].tf2class}
               </h2>
 
               <p class="fw-bold mb-2">
-                ${people[i].classtype}
+                ${mercs[i].classtype}
               </p>
 
               <img
-                src="images/${people[i].image}"
-                alt="${people[i].tf2class}"
+                src="images/${mercs[i].image}"
+                alt="${mercs[i].tf2class}"
                 class="merc-image mb-3"
                 loading="lazy"
               />
